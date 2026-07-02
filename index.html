@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smilecare Clinic · Diagnóstico + Propuesta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FCFDFE;
+    --bg-tint:#EFF6FA;
+    --ink:#182A33;
+    --ink-soft:#4E6470;
+    --blue:#5B9BD5;
+    --blue-deep:#2E6C9E;
+    --pink:#E9A6C1;
+    --pink-deep:#C97A9C;
+    --line:#DCE7ED;
+    --white:#FFFFFF;
+    --radius:18px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em;}
+  .wrap{max-width:880px; margin:0 auto; padding:0 28px;}
+  section{padding:96px 0;}
+  @media(max-width:680px){ section{padding:64px 0;} }
+
+  /* reveal */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* signature smile-arc divider */
+  .arc-divider{width:100%; display:flex; justify-content:center; padding:8px 0 0;}
+  .arc-divider svg{width:120px; height:36px; overflow:visible;}
+  .arc-path{stroke-dasharray:180; stroke-dashoffset:180; transition:stroke-dashoffset 1.1s ease;}
+  .arc-divider.in .arc-path{stroke-dashoffset:0;}
+
+  /* HERO */
+  .hero{
+    min-height:92vh;
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+    background:
+      radial-gradient(circle at 18% 20%, rgba(91,155,213,0.14), transparent 45%),
+      radial-gradient(circle at 85% 75%, rgba(233,166,193,0.16), transparent 50%),
+      var(--white);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--blue-deep); margin-bottom:22px; display:flex; align-items:center; gap:10px;
+  }
+  .hero-eyebrow::before{content:''; width:7px; height:7px; border-radius:50%; background:var(--pink-deep); display:inline-block;}
+  .hero h1{
+    font-size:clamp(34px, 6vw, 58px);
+    line-height:1.08;
+    max-width:760px;
+    color:var(--ink);
+  }
+  .hero h1 em{font-style:italic; color:var(--blue-deep);}
+  .hero p.sub{
+    margin-top:26px; max-width:560px; font-size:18px; color:var(--ink-soft);
+  }
+  .hero .meta-row{
+    margin-top:44px; display:flex; gap:34px; flex-wrap:wrap;
+  }
+  .meta-item{font-size:13px; color:var(--ink-soft);}
+  .meta-item strong{display:block; font-family:'Fraunces', serif; font-size:16px; color:var(--ink); font-weight:500;}
+
+  /* tooth motif svg top right, subtle */
+  .hero-motif{position:absolute; right:6%; top:14%; opacity:.5;}
+  @media(max-width:680px){.hero-motif{display:none;}}
+
+  /* SECTION HEADERS */
+  .kicker{
+    font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--blue-deep); margin-bottom:14px;
+  }
+  .sec-title{font-size:clamp(26px,4vw,36px); margin-bottom:18px; max-width:640px;}
+  .sec-lede{color:var(--ink-soft); font-size:16.5px; max-width:600px; margin-bottom:44px;}
+
+  /* DIAGNOSIS CARDS */
+  .diag-grid{display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;}
+  .diag-item{
+    background:var(--white);
+    padding:26px 28px;
+    display:grid; grid-template-columns:34px 1fr; gap:18px; align-items:start;
+  }
+  .diag-num{font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--pink-deep); padding-top:3px;}
+  .diag-item h4{font-family:'Inter'; font-weight:600; font-size:16px; margin-bottom:6px; color:var(--ink);}
+  .diag-item p{font-size:14.5px; color:var(--ink-soft);}
+  .diag-item.positive .diag-num{color:var(--blue-deep);}
+
+  .closing-line{
+    margin-top:38px; padding:22px 26px; background:var(--bg-tint); border-left:3px solid var(--blue);
+    border-radius:0 12px 12px 0; font-family:'Fraunces', serif; font-size:18px; font-style:italic; color:var(--blue-deep);
+  }
+
+  /* BENCHMARK */
+  .bench-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  @media(max-width:760px){.bench-grid{grid-template-columns:1fr;}}
+  .bench-card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:26px;
+  }
+  .bench-card .name{font-family:'Fraunces', serif; font-size:19px; margin-bottom:4px;}
+  .bench-card .loc{font-size:12.5px; color:var(--ink-soft); margin-bottom:16px;}
+  .bench-stat{display:flex; justify-content:space-between; padding:8px 0; border-top:1px solid var(--line); font-size:13.5px;}
+  .bench-stat:first-of-type{border-top:none;}
+  .bench-stat span:first-child{color:var(--ink-soft);}
+  .bench-stat span:last-child{font-family:'JetBrains Mono', monospace; color:var(--ink); font-weight:500;}
+
+  .gap-note{
+    margin-top:30px; font-size:14px; color:var(--ink-soft); max-width:600px;
+  }
+
+  /* VALUE NOW */
+  .value-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media(max-width:680px){.value-grid{grid-template-columns:1fr;}}
+  .value-card{
+    background:linear-gradient(160deg, var(--bg-tint), var(--white));
+    border:1px solid var(--line); border-radius:var(--radius); padding:28px;
+  }
+  .value-card .tag{font-family:'JetBrains Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--pink-deep); margin-bottom:10px;}
+  .value-card h4{font-size:18px; margin-bottom:10px; font-family:'Fraunces', serif; font-weight:500;}
+  .value-card p{font-size:14.5px; color:var(--ink-soft);}
+  .value-card .sample{
+    margin-top:14px; padding:14px 16px; background:var(--white); border:1px dashed var(--line); border-radius:10px;
+    font-size:13.5px; color:var(--ink); font-style:italic;
+  }
+
+  /* CRM COMPARISON */
+  .crm-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:10px;}
+  @media(max-width:680px){.crm-grid{grid-template-columns:1fr;}}
+  .crm-card{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:30px; position:relative;
+  }
+  .crm-card.pro{border-color:var(--blue); box-shadow:0 14px 40px -20px rgba(46,108,158,0.35);}
+  .crm-card .pill{
+    position:absolute; top:-12px; left:28px; background:var(--blue-deep); color:#fff; font-size:11px;
+    font-family:'JetBrains Mono', monospace; letter-spacing:.08em; padding:5px 12px; border-radius:20px; text-transform:uppercase;
+  }
+  .crm-card .pill.pink{background:var(--pink-deep);}
+  .crm-name{font-family:'Fraunces', serif; font-size:22px; margin:14px 0 4px;}
+  .crm-for{font-size:13px; color:var(--ink-soft); margin-bottom:18px;}
+  .crm-price{font-size:28px; font-family:'Fraunces', serif; color:var(--ink); margin-bottom:2px;}
+  .crm-price span{font-size:14px; font-family:'Inter'; color:var(--ink-soft); font-weight:500;}
+  .crm-sub{font-size:13px; color:var(--ink-soft); margin-bottom:22px;}
+  .crm-feats{list-style:none; display:flex; flex-direction:column; gap:11px;}
+  .crm-feats li{font-size:14px; padding-left:22px; position:relative; color:var(--ink);}
+  .crm-feats li::before{content:'✓'; position:absolute; left:0; color:var(--blue-deep); font-weight:600;}
+
+  .crm-note{
+    margin-top:26px; font-size:13.5px; color:var(--ink-soft); max-width:620px;
+  }
+
+  /* CTA */
+  .cta-sec{
+    background:linear-gradient(160deg, var(--bg-tint), var(--white));
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .cta-box{text-align:center; max-width:560px; margin:0 auto;}
+  .cta-box h2{font-size:clamp(26px,4.5vw,38px); margin-bottom:18px;}
+  .cta-box p{color:var(--ink-soft); font-size:16px; margin-bottom:36px;}
+  .wa-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--blue-deep); color:#fff; text-decoration:none;
+    padding:16px 32px; border-radius:40px; font-weight:600; font-size:15.5px;
+    transition:transform .25s ease, box-shadow .25s ease;
+    box-shadow:0 12px 30px -12px rgba(46,108,158,0.55);
+  }
+  .wa-btn:hover{transform:translateY(-2px); box-shadow:0 16px 36px -12px rgba(46,108,158,0.65);}
+  .wa-btn svg{width:19px; height:19px;}
+
+  footer{
+    padding:48px 0; text-align:center; font-size:12.5px; color:var(--ink-soft);
+  }
+  .closing-quote{
+    font-family:'Fraunces', serif; font-style:italic; font-size:19px; color:var(--ink);
+    max-width:520px; margin:0 auto 22px; line-height:1.5;
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-motif">
+    <svg width="180" height="180" viewBox="0 0 180 180" fill="none">
+      <path d="M60 40C60 25 75 15 90 15C105 15 120 25 120 40C120 60 112 70 112 95C112 115 105 130 95 130C86 130 84 110 84 95C84 80 82 130 72 130C62 130 68 115 68 95C68 70 60 60 60 40Z"
+        stroke="#5B9BD5" stroke-width="1.4" fill="none" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="wrap">
+    <div class="hero-eyebrow reveal">Segunda conversación · Smilecare Clinic</div>
+    <h1 class="reveal">Enrique, Dra. Diana — <em>ya los escuché.</em> Esto es lo que sigue.</h1>
+    <p class="sub reveal">No vengo a repetirles un CRM. Vengo a mostrarles, con lo que me contaron el otro día, hasta dónde puede llegar esto — para los dos, no solo para uno.</p>
+    <div class="meta-row reveal">
+      <div class="meta-item"><strong>Smilecare Clinic</strong>Segunda conversación</div>
+      <div class="meta-item"><strong>Guadalajara / Zapopan</strong>Zona de competencia</div>
+      <div class="meta-item"><strong>Miércoles 8, 11:00 AM</strong>Próxima cita</div>
+    </div>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#E9A6C1" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="escucha">
+  <div class="wrap">
+    <div class="kicker reveal">01 — Lo que escuché</div>
+    <h2 class="sec-title reveal">No les voy a vender lo mismo a los dos</h2>
+    <p class="sec-lede reveal">Porque no buscan lo mismo — y está bien que así sea.</p>
+
+    <div class="value-grid reveal">
+      <div class="value-card">
+        <div class="tag">Enrique</div>
+        <h4>Usted piensa en sistema</h4>
+        <p>En que cada cosa que se implemente se pueda controlar. En que si un día deja de pagar algo, no se quede sin nada de la noche a la mañana. Y ya sé que la segunda sucursal no es una idea — ya la están montando. Por eso empezamos simple: fichas por paciente, categorizadas por tratamiento, pagos y abonos claros, recordatorios automáticos por WhatsApp. Nada que ustedes no puedan entender o manejar.</p>
+      </div>
+      <div class="value-card">
+        <div class="tag">Dra. Diana</div>
+        <h4>Usted hoy piensa en su consultorio, uno a uno</h4>
+        <p>Y está bien — es lo que conoce y lo que sabe hacer mejor que nadie. Todavía no piensa en talleres ni en enseñar a otras odontólogas, ni tiene por qué. Eso no es algo que usted ya tenga en mente — es algo que yo le estoy proponiendo, porque veo en usted algo que quizá aún no ha tenido tiempo de ver.</p>
+      </div>
+    </div>
+    <p class="closing-line reveal">Un mismo sistema le puede dar a cada uno lo que busca. Por eso no les traigo una sola respuesta — les traigo un camino con dos velocidades.</p>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#E9A6C1" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="diagnostico">
+  <div class="wrap">
+    <div class="kicker reveal">02 — Diagnóstico</div>
+    <h2 class="sec-title reveal">Lo que vi cuando analicé su perfil</h2>
+    <p class="sec-lede reveal">Se lo digo con la misma honestidad con la que le explicaría un tratamiento a un paciente: hay cosas que ya están bien, y hay cosas que le están costando pacientes sin que usted lo note.</p>
+
+    <div class="diag-grid reveal">
+      <div class="diag-item positive">
+        <div class="diag-num">OK</div>
+        <div><h4>Su información básica está completa</h4><p>Dirección, teléfono y horario publicados — incluida la pausa de mediodía. Eso ya genera confianza mínima en quien la encuentra.</p></div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-num">01</div>
+        <div><h4>La primera imagen que ve un paciente es una foto de Street View</h4><p>Es lo primero que aparece en su ficha, y es la fachada del local tomada desde la calle — no transmite lo que realmente pasa adentro.</p></div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-num">02</div>
+        <div><h4>Solo 4 reseñas publicadas</h4><p>Dos mencionan a la Dra. Diana por nombre — eso es una ventaja real que casi nadie está aprovechando. Pero con tan pocas reseñas, su ficha compite en desventaja frente a clínicas con 20, 30 o más.</p></div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-num">03</div>
+        <div><h4>Hay una reseña negativa sin responder</h4><p>Marlene Díaz describe una mala experiencia y el perfil no tiene ninguna respuesta. Un paciente nuevo que la lea, la lee sola — sin nadie que dé la otra versión.</p></div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-num">04</div>
+        <div><h4>No hay sitio web ni descripción de servicios</h4><p>Un paciente que busca "ortodoncia" o "implantes cerca de mí" no tiene forma de saber si usted los ofrece antes de llamar.</p></div>
+      </div>
+      <div class="diag-item">
+        <div class="diag-num">05</div>
+        <div><h4>El perfil aparece como "por reclamar"</h4><p>Eso significa que probablemente no tiene control total sobre su propia ficha ni puede responder reseñas de forma oficial.</p></div>
+      </div>
+    </div>
+
+    <p class="closing-line reveal">No le digo esto para señalar lo que falta. Se lo digo porque ya sé exactamente cómo se resuelve — y ya empecé.</p>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#5B9BD5" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="benchmark" style="background:var(--bg-tint);">
+  <div class="wrap">
+    <div class="kicker reveal">03 — Panorama</div>
+    <h2 class="sec-title reveal">Así se están mostrando otras clínicas en su misma zona</h2>
+    <p class="sec-lede reveal">No es una carrera contra nadie — es simplemente para que vean con claridad hasta dónde puede llegar esto cuando se decide invertir en ello.</p>
+
+    <div class="bench-grid reveal">
+      <div class="bench-card">
+        <div class="name">Dental City</div>
+        <div class="loc">Zapopan · integral + Invisalign</div>
+        <div class="bench-stat"><span>Reseñas mostradas en su web</span><span>5 destacadas</span></div>
+        <div class="bench-stat"><span>Contenido</span><span>Antes/después, escaneo digital</span></div>
+        <div class="bench-stat"><span>Sitio web</span><span>Sí, con servicios listados</span></div>
+      </div>
+      <div class="bench-card">
+        <div class="name">MF Dental Center</div>
+        <div class="loc">Zapopan · +10 años operando</div>
+        <div class="bench-stat"><span>Reseñas</span><span>Múltiples, con nombre de doctora</span></div>
+        <div class="bench-stat"><span>Contenido</span><span>Testimonios largos, pacientes recurrentes</span></div>
+        <div class="bench-stat"><span>Sitio web</span><span>Sí</span></div>
+      </div>
+      <div class="bench-card">
+        <div class="name">All Denti Clinic</div>
+        <div class="loc">Guadalajara Centro</div>
+        <div class="bench-stat"><span>Facebook</span><span class="mono">489 likes</span></div>
+        <div class="bench-stat"><span>Actividad</span><span class="mono">24 hablando de esto</span></div>
+        <div class="bench-stat"><span>Presencia</span><span>FB + Instagram activos</span></div>
+      </div>
+    </div>
+    <p class="gap-note reveal">No tengo — ni voy a inventar — cifras exactas de ingresos de estas clínicas; eso no es información pública y no se lo voy a presentar como si lo fuera. Lo que sí es un hecho verificable: las tres tienen sitio web, más reseñas visibles y contenido que construye confianza antes de que el paciente llame. Usted ya tiene lo más difícil — pacientes que la mencionan por nombre. Le falta el sistema que lo muestre.</p>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#E9A6C1" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="valor">
+  <div class="wrap">
+    <div class="kicker reveal">04 — Ya empecé</div>
+    <h2 class="sec-title reveal">Esto ya lo puede usar hoy, sin costo</h2>
+    <p class="sec-lede reveal">Antes de proponerles nada, esto es lo que ya trabajé en su caso — sin que me lo pidieran, y sin esperar nada a cambio. Así trabajo yo.</p>
+
+    <div class="value-grid reveal">
+      <div class="value-card">
+        <div class="tag">Respuesta lista</div>
+        <h4>Para la reseña de Marlene Díaz</h4>
+        <p>Una respuesta profesional y empática, sin sonar defensiva, que reconoce la experiencia y abre la puerta a resolverlo fuera de línea.</p>
+        <div class="sample">"Diana, lamentamos mucho que su experiencia no haya sido la que buscamos ofrecer. Nos gustaría escucharla directamente y resolverlo — le escribimos por privado."</div>
+      </div>
+      <div class="value-card">
+        <div class="tag">Descripción lista</div>
+        <h4>Para su ficha de Google</h4>
+        <p>Un texto corto que explica qué servicios ofrece, para que aparezca en más búsquedas como "ortodoncia Zapopan" o "limpieza dental cerca de mí".</p>
+        <div class="sample">Categorías sugeridas: Clínica dental · Ortodoncista · Odontopediatra (según lo que realmente ofrezca)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#5B9BD5" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="quien-soy" style="background:var(--bg-tint);">
+  <div class="wrap">
+    <div class="kicker reveal">05 — Quién los va a acompañar en esto</div>
+    <h2 class="sec-title reveal">No estoy improvisando con ustedes</h2>
+    <p class="sec-lede reveal">Soy Shadow Operator — trabajo detrás de escena para que el negocio de otros brille al frente. Me formé directamente con David Turu, donde fui parte del equipo que lanzó Paulattier como Gerente de CMO. Tengo también el diplomado con Mauricio Benoist en habilidades de alto ingreso y PNL. Hoy en día, la atención es la nueva moneda — quien no tiene presencia digital, prácticamente no existe para un paciente nuevo que busca en Google antes de llamar.</p>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#5B9BD5" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="camino" style="background:var(--bg-tint);">
+  <div class="wrap">
+    <div class="kicker reveal">06 — El camino</div>
+    <h2 class="sec-title reveal">Dos formas de empezar — ustedes eligen el ritmo</h2>
+    <p class="sec-lede reveal">No tienen que elegir uno para siempre. Pueden empezar sencillo e ir escalando cuando estén listos.</p>
+
+    <div class="crm-grid reveal">
+      <div class="crm-card">
+        <span class="pill pink">Para empezar</span>
+        <div class="crm-name">CRM básico</div>
+        <div class="crm-for">Control total, sin complicarse — literalmente lo que me pidieron</div>
+        <ul class="crm-feats">
+          <li>Fichas por paciente, categorizadas por tratamiento</li>
+          <li>Pagos y abonos organizados y visibles</li>
+          <li>Historial completo del paciente</li>
+          <li>Recordatorios automáticos de citas por WhatsApp</li>
+          <li>Capacitación incluida para ustedes y su personal</li>
+        </ul>
+      </div>
+      <div class="crm-card pro">
+        <span class="pill">Para escalar</span>
+        <div class="crm-name">Phantom Root</div>
+        <div class="crm-for">El camino si lo que de verdad buscan es crecer, no solo ordenar</div>
+        <ul class="crm-feats">
+          <li>CRM Pro completo — todo conectado, no el básico</li>
+          <li>Reels y carruseles grabados por mí</li>
+          <li>Reclamo y limpieza de su Google Business Profile</li>
+          <li>Sitio web y dominio propio</li>
+          <li>Capacitación completa a todo su equipo</li>
+          <li>Cuando decidan invertir en anuncios, reportes mensuales de resultados</li>
+        </ul>
+      </div>
+    </div>
+    <p class="crm-note reveal">No tienen que decidir hoy. Tengo facilidades de pago, y si el presupuesto está un poco ajustado esta temporada — lo platicamos el miércoles con calma, sin ningún problema. Esto no se los presento como un gasto: es la inversión que les puede traer las ventas para lo que ya están construyendo — esa segunda sucursal.</p>
+    <p class="crm-note reveal" style="margin-top:16px;">Enrique — sobre el software a la medida que me pidió: ya empecé a investigarlo. Esta semana le llevo un panorama real de qué implicaría hacerlo, para que lo decidan con información, no a ciegas. Y sobre la plataforma que ya les mostré — sé que se ve como mucho al principio, pero es más sencilla de lo que parece; con la capacitación que incluyo, ustedes y su personal la van a manejar sin problema.</p>
+    <p class="crm-note reveal" style="margin-top:16px;">Una última nota honesta: pasada la renovación del tercer mes, el modelo evoluciona — dejo de cobrar solo por el trabajo y paso a construir con ustedes con un porcentaje ligado a los resultados. No es casualidad. Significa que mientras más crezcan ustedes, más crezco yo con ustedes — no voy por un cheque fijo, voy por una sociedad real.</p>
+  </div>
+</section>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#E9A6C1" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+<section id="proyeccion">
+  <div class="wrap">
+    <div class="kicker reveal">07 — Lo que se queda sobre la mesa</div>
+    <h2 class="sec-title reveal">¿Qué pasaría si trabajara menos y ganara varias veces más?</h2>
+    <p class="sec-lede reveal">Dra. Diana, usted misma me lo dijo: no tiene tiempo ni para grabar. Y tiene razón en sentirlo así — la consultoría uno a uno tiene un techo. Solo hay tantas horas en el día y tantos pacientes que puede atender una sola persona. Lo que le propongo no es que deje de hacer lo que hace mejor que nadie — es que ese trabajo deje de ser la única fuente de ingreso.</p>
+
+    <div class="diag-grid reveal">
+      <div class="diag-item positive">
+        <div class="diag-num">A</div>
+        <div><h4>La segunda sucursal que ya están montando</h4><p>El mismo sistema, ya probado en la primera clínica, se replica ahí sin empezar de cero — con la ventaja de la atención digital que ya hayan construido para entonces.</p></div>
+      </div>
+      <div class="diag-item positive">
+        <div class="diag-num">B</div>
+        <div><h4>Talleres o cursos, si usted decide enseñar</h4><p>Esto no es algo que ya tenga planeado — es una puerta que se abre cuando tiene presencia digital. Yo me encargo de grabar; usted solo pone el conocimiento que ya tiene.</p></div>
+      </div>
+      <div class="diag-item positive">
+        <div class="diag-num">C</div>
+        <div><h4>Una tienda en línea de productos y servicios</h4><p>Desde kits de higiene hasta paquetes de mantenimiento — ingresos que no dependen de que alguien esté sentado en la silla.</p></div>
+      </div>
+      <div class="diag-item positive">
+        <div class="diag-num">D</div>
+        <div><h4>Redes sociales no es solo para conseguir pacientes</h4><p>También es donde se encuentran proveedores, socios y — sobre todo — futuros empleados que ya compartan esa visión de hacer bien las cosas. Con presencia digital, ustedes pueden construir un sistema de delegación y contratación de vanguardia, en vez de depender de quien llegue por recomendación.</p></div>
+      </div>
+    </div>
+
+    <p class="crm-note reveal" style="margin-top:30px;">Los números de abajo son un punto de partida, no una promesa — ajústenlos juntos conmigo el miércoles a lo que realmente factura hoy. La idea es que vean, con sus propias cifras, qué tan lejos puede llegar esto.</p>
+
+    <div class="calc-box reveal">
+      <div class="calc-col">
+        <div class="calc-label">Hoy: solo consultorio, uno a uno</div>
+        <div class="calc-field">
+          <label for="pacientes">Pacientes atendidos por semana</label>
+          <input type="range" id="pacientes" min="5" max="40" value="15">
+          <div class="calc-val"><span id="pacientes-val">15</span> pacientes/semana</div>
+        </div>
+        <div class="calc-field">
+          <label for="ticket">Ticket promedio por paciente</label>
+          <input type="range" id="ticket" min="300" max="3000" step="50" value="800">
+          <div class="calc-val">$<span id="ticket-val">800</span> MXN</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-label">Ingreso mensual actual</div>
+          <div class="calc-result-num" id="actual-total">$52,000 MXN</div>
+          <div class="calc-result-sub">Con techo — depende 100% de las horas que usted esté en el consultorio</div>
+        </div>
+      </div>
+
+      <div class="calc-col highlight">
+        <div class="calc-label">Con presencia digital, encima de lo anterior</div>
+        <div class="calc-field">
+          <label for="talleres">Talleres al mes (asistentes × precio)</label>
+          <input type="range" id="talleres" min="0" max="4" value="1">
+          <div class="calc-val"><span id="talleres-val">1</span> taller/mes · 12 asistentes · $800 c/u</div>
+        </div>
+        <div class="calc-field">
+          <label for="reservas">Pacientes extra por reservas online</label>
+          <input type="range" id="reservas" min="0" max="20" value="6">
+          <div class="calc-val"><span id="reservas-val">6</span> pacientes extra/semana</div>
+        </div>
+        <div class="calc-field">
+          <label for="tienda">Ventas de tienda en línea al mes</label>
+          <input type="range" id="tienda" min="0" max="60" value="15">
+          <div class="calc-val"><span id="tienda-val">15</span> ventas · $350 c/u</div>
+        </div>
+        <div class="calc-result">
+          <div class="calc-result-label">Ingreso potencial mensual total</div>
+          <div class="calc-result-num" id="potencial-total">$81,750 MXN</div>
+          <div class="calc-result-sub"><span id="multiplicador">1.6x</span> lo que genera hoy — sin sumar más horas de consulta</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="closing-line reveal">Esto no es un plan para vender más citas. Es lo que hace posible que Smilecare deje de depender de una sola silla, de una sola clínica.</p>
+
+    <div class="mission-box reveal">Y le voy a ser honesto con algo más grande que el CRM o las redes: no me dedico a esto solo por vender un servicio. Me duele ver a profesionales que sí estudiaron, que sí trabajaron por años, ganando menos que alguien que sube videos sin ningún valor real. <u>Eso no es justo — y ayudar a cambiarlo es, literalmente, a lo que dedico mi tiempo.</u></div>
+  </div>
+</section>
+
+<style>
+  .calc-box{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;}
+  @media(max-width:760px){.calc-box{grid-template-columns:1fr;}}
+  .calc-col{background:var(--white); border:1px solid var(--line); border-radius:var(--radius); padding:26px;}
+  .calc-col.highlight{border-color:var(--blue); background:linear-gradient(160deg, var(--bg-tint), var(--white));}
+  .calc-label{font-family:'JetBrains Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--pink-deep); margin-bottom:20px;}
+  .calc-col.highlight .calc-label{color:var(--blue-deep);}
+  .calc-field{margin-bottom:20px;}
+  .calc-field label{display:block; font-size:13.5px; color:var(--ink-soft); margin-bottom:8px;}
+  .calc-field input[type="range"]{width:100%; accent-color:var(--blue-deep);}
+  .calc-val{font-size:13px; font-family:'JetBrains Mono', monospace; color:var(--ink); margin-top:6px;}
+  .calc-result{margin-top:24px; padding-top:20px; border-top:1px solid var(--line);}
+  .calc-result-label{font-size:12.5px; color:var(--ink-soft); margin-bottom:4px;}
+  .calc-result-num{font-family:'Fraunces', serif; font-size:30px; color:var(--ink);}
+  .calc-col.highlight .calc-result-num{color:var(--blue-deep);}
+  .calc-result-sub{font-size:12.5px; color:var(--ink-soft); margin-top:6px;}
+
+  .mission-box{
+    margin-top:40px;
+    background:#DCEEDD;
+    color:#111;
+    padding:38px 40px;
+    border-radius:var(--radius);
+    font-family:'Fraunces', serif;
+    font-size:24px;
+    line-height:1.5;
+    font-weight:500;
+  }
+  .mission-box u{text-decoration-color:#2F6B3C; text-decoration-thickness:2px; text-underline-offset:4px;}
+  @media(max-width:680px){.mission-box{font-size:19px; padding:28px 24px;}}
+</style>
+
+<div class="arc-divider"><svg viewBox="0 0 120 36"><path class="arc-path" d="M4 6 Q60 40 116 6" stroke="#5B9BD5" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>
+
+
+<section class="cta-sec">
+  <div class="wrap cta-box reveal">
+    <div class="kicker" style="justify-content:center; display:flex;">08 — Miércoles 8, 11:00 AM</div>
+    <h2>Nos vemos el miércoles — vengan con la mente abierta</h2>
+    <p>Voy a llevar el logo ya digitalizado, un avance del sitio web, y — si me da tiempo, no es seguro pero voy a hacer lo posible — una preliminar del CRM a la medida y más económico que me pidió Enrique. También quiero hacerles la entrevista de personalidad a los dos — cómo empezaron, qué los trae hasta aquí — para que el contenido que grabemos después realmente los represente. No hay presión de decidir nada en automático, y tengo facilidades de pago si el presupuesto está ajustado. Solo lleguen dispuestos.</p>
+    <a class="wa-btn" href="https://wa.me/522205717032?text=Hola%20Alex%2C%20soy%20Enrique.%20Confirmamos%20para%20el%20mi%C3%A9rcoles%208%20a%20las%2011%3A00." target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 6.32A8.86 8.86 0 0012.02 3.6a8.94 8.94 0 00-7.73 13.4L3 21l4.14-1.27a8.93 8.93 0 004.87 1.42h.01a8.94 8.94 0 006.32-15.24zM12.02 19.7a7.4 7.4 0 01-3.78-1.03l-.27-.16-2.8.87.86-2.72-.18-.28a7.42 7.42 0 1113.86-3.87 7.36 7.36 0 01-7.69 7.19zm4.06-5.53c-.22-.11-1.3-.64-1.5-.71-.2-.07-.35-.11-.5.11-.15.22-.57.71-.7.86-.13.14-.26.16-.48.05-.22-.11-.94-.35-1.79-1.1-.66-.59-1.11-1.32-1.24-1.54-.13-.22-.01-.34.1-.45.1-.1.22-.26.33-.39.11-.13.15-.22.22-.37.07-.15.04-.28-.02-.39-.06-.11-.5-1.21-.69-1.65-.18-.44-.36-.38-.5-.38h-.43c-.15 0-.39.06-.59.28-.2.22-.77.75-.77 1.83 0 1.08.79 2.12.9 2.27.11.15 1.55 2.37 3.76 3.32.53.23.94.36 1.26.46.53.17 1.01.15 1.39.09.42-.06 1.3-.53 1.49-1.04.18-.51.18-.95.13-1.04-.05-.09-.2-.15-.42-.26z"/></svg>
+      Escribir a Alex por WhatsApp
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p class="closing-quote">Una sonrisa bien cuidada merece un sistema tan cuidado como ella.</p>
+  <div class="mono">Smilecare Clinic · Para Enrique y Dra. Diana · Preparado por BE AI</div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal, .arc-divider');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold:0.15});
+  revealEls.forEach(el=>io.observe(el));
+
+  // Calculadora de proyección
+  const fmt = n => '$' + Math.round(n).toLocaleString('es-MX') + ' MXN';
+  const pacientes = document.getElementById('pacientes');
+  const ticket = document.getElementById('ticket');
+  const talleres = document.getElementById('talleres');
+  const reservas = document.getElementById('reservas');
+  const tienda = document.getElementById('tienda');
+
+  const TALLER_ASISTENTES = 12, TALLER_PRECIO = 800;
+  const TIENDA_PRECIO = 350;
+
+  function updateCalc(){
+    const p = +pacientes.value, t = +ticket.value;
+    const actual = p * t * 4.33;
+
+    const nTalleres = +talleres.value;
+    const nReservas = +reservas.value;
+    const nTienda = +tienda.value;
+
+    const ingresoTalleres = nTalleres * TALLER_ASISTENTES * TALLER_PRECIO;
+    const ingresoReservas = nReservas * t * 4.33;
+    const ingresoTienda = nTienda * TIENDA_PRECIO;
+    const potencial = actual + ingresoTalleres + ingresoReservas + ingresoTienda;
+
+    document.getElementById('pacientes-val').textContent = p;
+    document.getElementById('ticket-val').textContent = t.toLocaleString('es-MX');
+    document.getElementById('talleres-val').textContent = nTalleres;
+    document.getElementById('reservas-val').textContent = nReservas;
+    document.getElementById('tienda-val').textContent = nTienda;
+
+    document.getElementById('actual-total').textContent = fmt(actual);
+    document.getElementById('potencial-total').textContent = fmt(potencial);
+    document.getElementById('multiplicador').textContent = (actual > 0 ? (potencial/actual).toFixed(1) : '0') + 'x';
+  }
+  [pacientes, ticket, talleres, reservas, tienda].forEach(el => el.addEventListener('input', updateCalc));
+  updateCalc();
+</script>
+
+</body>
+</html>
